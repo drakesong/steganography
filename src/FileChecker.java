@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class FileChcecker extends javax.swing.filechooser.FileFilter {
+public class FileChecker extends javax.swing.filechooser.FileFilter {
     protected boolean isImageFile(String ext) {
         return (ext.equals("jpg") || ext.equals("png"));
     }
