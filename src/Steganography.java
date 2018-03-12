@@ -32,7 +32,28 @@ public class Steganography {
         BufferedImage img = userSpace(imgOrig);
         img = addText(img, msg);
 
-        return setImage(img, new File(imagePath(path, output, "png")), "png");
+        return setImage(img, new File(imagePath(path, output, "png")));
+    }
+
+    /**
+     * Decodes the message hidden in the given image
+     *
+     * @param path  Path of the image
+     * @param name  Name of the image file
+     * @return      String of the message; Error message and empty String if no message hidden
+     */
+    public String decode(String path, String name) {
+        byte[] decode;
+        try {
+            BufferedImage img = userSpace(getImage(imagePath(path, name, "png")));
+            decode = decodeText(getByteData(img));
+            return new String(decode);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "There is no hidden message in this image!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return "";
+        }
     }
 
     /**
@@ -138,13 +159,12 @@ public class Steganography {
      *
      * @param img   Image file that is to be saved
      * @param f     File to save the image to
-     * @param ext   Format of the image to be saved
      * @return      True if the save is successful
      */
-    private boolean setImage(BufferedImage img, File f, String ext) {
+    private boolean setImage(BufferedImage img, File f) {
         try {
             f.delete();
-            ImageIO.write(img, ext, f);
+            ImageIO.write(img, "png", f);
             return true;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
@@ -176,6 +196,28 @@ public class Steganography {
         }
 
         return img;
+    }
+
+    /**
+     * Retrieves the hidden message from the byte array of image
+     *
+     * @param img   Byte array of the image
+     * @return      Array of data that contains the hidden message
+     */
+    private byte[] decodeText(byte[] img) {
+        int length = 0;
+        int offset = 32;
+        for (int i = 0; i < offset; i++) {
+            length = (length << 1) | (img[i] & 1);
+        }
+
+        byte[] result = new byte[length];
+        for (int j = 0; j < result.length; j++) {
+            for (int k = 0; k < 8; k++, offset++) {
+                result[j] = (byte) ((result[j] << 1) | (img[offset] & 1));
+            }
+        }
+        return result;
     }
 
 }
