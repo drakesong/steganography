@@ -146,12 +146,7 @@ public class Steganography {
      * @return  Byte[4] array that contains the converted integer in byte format
      */
     private byte[] bitConversion(int i) {
-        byte byte3 = (byte) ((i & 0xFF000000) >>> 24);
-        byte byte2 = (byte) ((i & 0x00FF0000) >>> 16);
-        byte byte1 = (byte) ((i & 0x0000FF00) >>> 8);
-        byte byte0 = (byte) ((i & 0x000000FF));
-
-        return new byte[]{byte3, byte2, byte1, byte0};
+        return new byte[]{0, 0, 0, (byte) (i & 0x000000FF)};
     }
 
     /**
