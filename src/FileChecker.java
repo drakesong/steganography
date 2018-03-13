@@ -37,7 +37,7 @@ public class FileChecker extends javax.swing.filechooser.FileFilter {
      * @param f File to extract the extension from
      * @return  Extension of the file; "" if none
      */
-    private static String getExtension(File f) {
+    public static String getExtension(File f) {
         String s = f.getName();
         int i = s.lastIndexOf('.');
         if (i > 0 && i < s.length() - 1) {
