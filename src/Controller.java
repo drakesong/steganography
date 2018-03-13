@@ -64,16 +64,16 @@ public class Controller {
         decButton = new DecodeButton();
         decodeButton.addActionListener(decButton);
 
-        encode_view();
+        encodeView();
     }
 
-    private void encode_view() {
+    private void encodeView() {
         update();
         view.setContentPane(encode_panel);
         view.setVisible(true);
     }
 
-    private void decode_view() {
+    private void decodeView() {
         update();
         view.setContentPane(decode_panel);
         view.setVisible(true);
@@ -81,13 +81,13 @@ public class Controller {
 
     private class Encode implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            encode_view();
+            encodeView();
         }
     }
 
     private class Decode implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            decode_view();
+            decodeView();
 
             JFileChooser chooser = new JFileChooser("./");
             chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -103,7 +103,6 @@ public class Controller {
                     stat_name = stat_name.substring(0, stat_name.length() - 4);
                     image_input.setIcon(new ImageIcon(ImageIO.read(new File(image))));
                 } catch (Exception except) {
-                    //msg if opening fails
                     JOptionPane.showMessageDialog(view,
                             "The File cannot be opened!",
                             "Error!", JOptionPane.INFORMATION_MESSAGE);
@@ -134,11 +133,11 @@ public class Controller {
                     path = path.substring(0, path.length() - name.length() - 1);
                     name = name.substring(0, name.length() - 4);
 
-                    String stegan = JOptionPane.showInputDialog(view,
+                    String output = JOptionPane.showInputDialog(view,
                             "Enter output file name:", "File name",
                             JOptionPane.PLAIN_MESSAGE);
 
-                    if (model.encode(path, name, ext, stegan, text)) {
+                    if (model.encode(path, name, ext, output, text)) {
                         JOptionPane.showMessageDialog(view,
                                 "The Image was encoded Successfully!",
                                 "Success!", JOptionPane.INFORMATION_MESSAGE);
@@ -147,8 +146,8 @@ public class Controller {
                                 "The Image could not be encoded!",
                                 "Error!", JOptionPane.INFORMATION_MESSAGE);
                     }
-                    decode_view();
-                    image_input.setIcon(new ImageIcon(ImageIO.read(new File(path + "/" + stegan + ".png"))));
+                    decodeView();
+                    image_input.setIcon(new ImageIcon(ImageIO.read(new File(path + "/" + output + ".png"))));
                 } catch (Exception except) {
                     JOptionPane.showMessageDialog(view,
                             "The File cannot be opened!",
@@ -162,8 +161,8 @@ public class Controller {
         public void actionPerformed(ActionEvent e) {
             String message = model.decode(stat_path, stat_name);
             System.out.println(stat_path + ", " + stat_name);
-            if (message != "") {
-                encode_view();
+            if (!message.equals("")) {
+                encodeView();
                 JOptionPane.showMessageDialog(view,
                         "The Image was decoded Successfully!",
                         "Success!", JOptionPane.INFORMATION_MESSAGE);
@@ -176,7 +175,7 @@ public class Controller {
         }
     }
 
-    public void update() {
+    private void update() {
         input.setText("");
         image_input.setIcon(null);
         stat_path = "";
@@ -185,8 +184,6 @@ public class Controller {
 
     public static void main(String args[]) {
         new Controller(
-                new View("Steganography"),
-                new Steganography()
-        );
+                new View("Steganography"), new Steganography());
     }
 }
