@@ -1,5 +1,5 @@
 # Steganography
-Steganography is the practice of concealing messages or information within other non-secret text or data. This program utilizes bitwise operations to conceal text messages in a JPG/PNG image without visually altering the image itself.
+Steganography is the practice of concealing messages or information within other non-secret text or data. This program utilizes bit-wise operations to conceal text messages in a JPG/PNG image without visually altering the image itself.
 
 ## Usage
 Run the `main` method on `Controller.java`. This will produce a GUI with which `encode` and `decode` functions can be utilized.
