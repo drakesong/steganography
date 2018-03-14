@@ -84,6 +84,7 @@ public class Controller {
                             "Error!", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
+            reset();
         }
     }
 
@@ -125,10 +126,11 @@ public class Controller {
                         "The Image could not be decoded!",
                         "Error!", JOptionPane.INFORMATION_MESSAGE);
             }
+            reset();
         }
     }
 
-    private void update() {
+    private void reset() {
         input.setText("");
         image_input.setIcon(null);
         stat_path = "";
