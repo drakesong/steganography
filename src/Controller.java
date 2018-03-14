@@ -1,38 +1,23 @@
+import java.awt.*;
 import java.io.File;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
-import javax.swing.JFileChooser;
 
 public class Controller {
-
     private View view;
     private Steganography model;
 
-    private JPanel decode_panel;
-    private JPanel encode_panel;
-
     private JTextArea input;
-    private JButton encodeButton, decodeButton;
+    private JButton encodeButton, decodeButton, fileButton;
     private JLabel image_input;
 
-    private JMenuItem encode;
-    private JMenuItem decode;
-    private JMenuItem exit;
-
-    private Encode enc;
-    private Decode dec;
     private EncodeButton encButton;
     private DecodeButton decButton;
+    private FileButton filButton;
 
     private String stat_path = "";
     private String stat_name = "";
@@ -41,80 +26,19 @@ public class Controller {
         view = v;
         model = m;
 
-        encode_panel = view.getTextPanel();
-        decode_panel = view.getImagePanel();
-
         input = view.getText();
         image_input = view.getImageInput();
 
         encodeButton = view.getEncodeButton();
         decodeButton = view.getDecodeButton();
+        fileButton = view.getFileButton();
 
-        encode = view.getEncode();
-        decode = view.getDecode();
-        exit = view.getExit();
-
-        enc = new Encode();
-        encode.addActionListener(enc);
-        dec = new Decode();
-        decode.addActionListener(dec);
-        exit.addActionListener(new Exit());
         encButton = new EncodeButton();
         encodeButton.addActionListener(encButton);
         decButton = new DecodeButton();
         decodeButton.addActionListener(decButton);
-
-        encodeView();
-    }
-
-    private void encodeView() {
-        update();
-        view.setContentPane(encode_panel);
-        view.setVisible(true);
-    }
-
-    private void decodeView() {
-        update();
-        view.setContentPane(decode_panel);
-        view.setVisible(true);
-    }
-
-    private class Encode implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            encodeView();
-        }
-    }
-
-    private class Decode implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            decodeView();
-
-            JFileChooser chooser = new JFileChooser("./");
-            chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            chooser.setFileFilter(new FileChecker());
-            int returnVal = chooser.showOpenDialog(view);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File directory = chooser.getSelectedFile();
-                try {
-                    String image = directory.getPath();
-                    stat_name = directory.getName();
-                    stat_path = directory.getPath();
-                    stat_path = stat_path.substring(0, stat_path.length() - stat_name.length() - 1);
-                    stat_name = stat_name.substring(0, stat_name.length() - 4);
-                    image_input.setIcon(new ImageIcon(ImageIO.read(new File(image))));
-                } catch (Exception except) {
-                    JOptionPane.showMessageDialog(view,
-                            "The File cannot be opened!",
-                            "Error!", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        }
-    }
-
-    private class Exit implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            System.exit(0);
-        }
+        filButton = new FileButton();
+        fileButton.addActionListener(filButton);
     }
 
     private class EncodeButton implements ActionListener {
@@ -139,15 +63,38 @@ public class Controller {
 
                     if (model.encode(path, name, ext, output, text)) {
                         JOptionPane.showMessageDialog(view,
-                                "The Image was encoded Successfully!",
+                                "The Image was encoded successfully!",
                                 "Success!", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(view,
                                 "The Image could not be encoded!",
                                 "Error!", JOptionPane.INFORMATION_MESSAGE);
                     }
-                    decodeView();
-                    image_input.setIcon(new ImageIcon(ImageIO.read(new File(path + "/" + output + ".png"))));
+                    encodePopUp(new ImageIcon(ImageIO.read(new File(path + "/" + output + ".png"))));
+                } catch (Exception except) {
+                    JOptionPane.showMessageDialog(view,
+                            "The File cannot be opened!",
+                            "Error!", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        }
+    }
+
+    private class FileButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser chooser = new JFileChooser("./");
+            chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            chooser.setFileFilter(new FileChecker());
+            int returnVal = chooser.showOpenDialog(view);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File directory = chooser.getSelectedFile();
+                try {
+                    String image = directory.getPath();
+                    stat_name = directory.getName();
+                    stat_path = directory.getPath();
+                    stat_path = stat_path.substring(0, stat_path.length() - stat_name.length() - 1);
+                    stat_name = stat_name.substring(0, stat_name.length() - 4);
+                    image_input.setIcon(new ImageIcon(ImageIO.read(new File(image))));
                 } catch (Exception except) {
                     JOptionPane.showMessageDialog(view,
                             "The File cannot be opened!",
@@ -162,11 +109,10 @@ public class Controller {
             String message = model.decode(stat_path, stat_name);
             System.out.println(stat_path + ", " + stat_name);
             if (!message.equals("")) {
-                encodeView();
                 JOptionPane.showMessageDialog(view,
                         "The Image was decoded Successfully!",
                         "Success!", JOptionPane.INFORMATION_MESSAGE);
-                input.setText(message);
+                decodePopUp(message);
             } else {
                 JOptionPane.showMessageDialog(view,
                         "The Image could not be decoded!",
@@ -182,8 +128,29 @@ public class Controller {
         stat_name = "";
     }
 
+    private void encodePopUp(ImageIcon img) {
+        JFrame frame = new JFrame("Encoded Image");
+        JLabel image = new JLabel(img);
+        image.setPreferredSize(new Dimension(500, 400));
+        frame.setContentPane(image);
+        frame.setLocation(120, 120);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    private void decodePopUp(String msg) {
+        JFrame frame = new JFrame("Decoded Message");
+        JTextArea text = new JTextArea(msg);
+        text.setEditable(false);
+        text.setPreferredSize(new Dimension(500, 400));
+        frame.setContentPane(text);
+        frame.setLocation(120,120);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
     public static void main(String args[]) {
         new Controller(
-                new View("Steganography"), new Steganography());
+                new View(), new Steganography());
     }
 }
