@@ -1,10 +1,17 @@
-import java.awt.*;
 import java.io.File;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Dimension;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+
 import javax.imageio.ImageIO;
 
 public class Controller {
@@ -110,7 +117,7 @@ public class Controller {
             System.out.println(stat_path + ", " + stat_name);
             if (!message.equals("")) {
                 JOptionPane.showMessageDialog(view,
-                        "The Image was decoded Successfully!",
+                        "The Image was decoded successfully!",
                         "Success!", JOptionPane.INFORMATION_MESSAGE);
                 decodePopUp(message);
             } else {

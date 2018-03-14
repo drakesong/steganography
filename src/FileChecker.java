@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.File;
 
 public class FileChecker extends javax.swing.filechooser.FileFilter {
 
