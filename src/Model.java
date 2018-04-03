@@ -1,11 +1,10 @@
-import java.awt.Graphics2D;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
-
-import javax.imageio.ImageIO;
 import java.io.File;
-import javax.swing.JOptionPane;
 
 
 public class Model {
