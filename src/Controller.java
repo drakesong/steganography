@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 
 public class Controller {
     private View view;
-    private Steganography model;
+    private Model model;
 
     private JTextArea input;
     private JButton encodeButton, decodeButton, fileButton;
@@ -29,7 +29,7 @@ public class Controller {
     private String stat_path = "";
     private String stat_name = "";
 
-    public Controller(View v, Steganography m) {
+    public Controller(View v, Model m) {
         view = v;
         model = m;
 
@@ -160,6 +160,6 @@ public class Controller {
 
     public static void main(String args[]) {
         new Controller(
-                new View(), new Steganography());
+                new View(), new Model());
     }
 }

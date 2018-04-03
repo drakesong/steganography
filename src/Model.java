@@ -8,12 +8,12 @@ import java.io.File;
 import javax.swing.JOptionPane;
 
 
-public class Steganography {
+public class Model {
 
     /**
      * Empty constructor
      */
-    public Steganography() {
+    public Model() {
     }
 
     /**
